@@ -55,7 +55,7 @@ export default function StartScreen({ onStart }) {
                       onClick={() => onStart('hard')}
                     >
                       <span className="btn-label">HARD</span>
-                      <span className="btn-desc">빠른 판단 &amp; 반응</span>
+                      <span className="btn-desc">방해 아이템 등장!</span>
                 {best.hard !== null && (
                   <span className="btn-best">BEST {best.hard}개</span>
                 )}
