@@ -12,17 +12,19 @@ export const difficultySettings = {
     wordScale: 0.94,
     basketScale: 0.82,
     fivePointWeight: 0.15,
+    hintUntilCount: 10,
   },
   hard: {
-    initialSpeed: 5,
-    speedIncrease: 0.52,
-    maxSpeed: 12,
-    spawnInterval: 820,
+    initialSpeed: 3.6,
+    speedIncrease: 0.38,
+    maxSpeed: 9,
+    spawnInterval: 980,
     maxWordsOnScreen: 5,
     correctProbability: 0.48,
     wordScale: 0.78,
     basketScale: 0.76,
     fivePointWeight: 0.15,
+    hintUntilCount: 0,
   },
 };
 

@@ -413,7 +413,9 @@ export class GameEngine {
   drawWord(ctx, word) {
     const { x, y, width, height, fontSize, word: text, correct } = word;
     const radius = 18;
-    const isCorrect = correct;
+    const hintLimit = this.settings.hintUntilCount ?? 0;
+    const showAnswerHint = hintLimit > 0 && this.correctCount < hintLimit;
+    const isCorrect = showAnswerHint && correct;
     const left = x - width / 2;
     const top = y - height / 2;
 

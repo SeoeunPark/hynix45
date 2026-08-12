@@ -52,8 +52,7 @@ export const keywords = [
   { word: 'Customer First', correct: false, points: 0, explanation: 'Customer Focus와 비슷하지만 다른 표현이에요. SKMS 키워드는 Customer Focus입니다.' },
   { word: 'Date', correct: false, points: 0, explanation: 'Data와 헷갈리기 쉬운 단어예요. SKMS 키워드는 Data입니다.' },
   { word: '협력', correct: false, points: 0, explanation: '협업과 비슷하지만 SKMS 키워드는 협업입니다.' },
-  { word: '지속적 행복', correct: false, points: 0, explanation: '지속적인 행복과 표현이 달라요. SKMS 키워드는 지속적인 행복입니다.' },
-
+  
   // 오답 — 부정적·해로운 행동·감정
   { word: '포기', correct: false, points: 0, explanation: '포기는 적극적·자발적 SKMS 태도와 맞지 않아요.' },
   { word: '좌절', correct: false, points: 0, explanation: '좌절은 의욕적·패기 있는 SKMS 자세와 맞지 않아요.' },

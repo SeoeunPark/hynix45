@@ -30,7 +30,8 @@ export default function ResultScreen({ result, onRestart, onPlayAgain }) {
       <div className="result-content">
         <div className="result-frame">
           <div className="result-frame-inner">
-            <div className={`result-main ${isClear ? 'result-main--clear' : ''}`}>
+            <div className="result-scroll">
+              <div className={`result-main ${isClear ? 'result-main--clear' : ''}`}>
               <header className="result-header">
                 <p className="result-brand">{isClear ? 'WELCOME TO ONE TEAM' : 'GAME OVER'}</p>
                 <h1 className={`result-title ${isClear ? 'result-title--clear result-title--shine' : ''}`}>
@@ -124,15 +125,16 @@ export default function ResultScreen({ result, onRestart, onPlayAgain }) {
                   &ldquo;<span className="result-skms">SKMS</span>를 마음에 새기고, SK hynix와 함께 성장해요.&rdquo;
                 </p>
               )}
-
-              <div className="result-actions">
-                <button type="button" className="btn-secondary" onClick={onRestart}>
-                  메인 화면으로
-                </button>
-                <button type="button" className="btn-primary" onClick={onPlayAgain}>
-                  다시 하기
-                </button>
               </div>
+            </div>
+
+            <div className="result-actions">
+              <button type="button" className="btn-secondary" onClick={onRestart}>
+                메인 화면으로
+              </button>
+              <button type="button" className="btn-primary" onClick={onPlayAgain}>
+                다시 하기
+              </button>
             </div>
           </div>
         </div>

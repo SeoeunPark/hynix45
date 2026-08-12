@@ -44,7 +44,7 @@ export default function StartScreen({ onStart }) {
                       onClick={() => onStart('easy')}
                     >
                       <span className="btn-label">EASY</span>
-                      <span className="btn-desc">기본 개념 익히기</span>
+                      <span className="btn-desc">기본 개념 익히기 · 10개 이후 힌트 OFF</span>
                 {best.easy !== null && (
                   <span className="btn-best">BEST {best.easy}개</span>
                 )}

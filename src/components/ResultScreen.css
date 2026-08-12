@@ -1,6 +1,7 @@
 .result-screen {
   width: 100%;
-  height: 100%;
+  min-height: 100%;
+  min-height: 100dvh;
   height: 100dvh;
   overflow: hidden;
   position: relative;
@@ -57,14 +58,22 @@
   position: relative;
   flex: 1;
   min-height: 0;
-  padding: 1.85rem 1.45rem 1.4rem;
+  padding: 1.35rem 1.2rem 1rem;
   border-radius: 17px;
   background: linear-gradient(180deg, #FFFBFA 0%, #FFFFFF 42%, #FFFFFF 100%);
-  overflow-y: auto;
-  overscroll-behavior: contain;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
+}
+
+.result-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .result-frame-inner::before {
@@ -90,9 +99,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  margin: auto;
-  padding: 0.35rem 0.15rem 0.45rem;
+  gap: 0.85rem;
+  margin: 0;
+  padding: 0.15rem 0.1rem 0.25rem;
+  flex: 1 0 auto;
 }
 
 .result-main--clear {
@@ -402,7 +412,9 @@
   display: flex;
   flex-direction: column;
   gap: 0.55rem;
-  margin-top: 0.15rem;
+  margin-top: 0;
+  padding-top: 0.75rem;
+  flex-shrink: 0;
 }
 
 .btn-primary {
@@ -462,17 +474,41 @@
   letter-spacing: -0.01em;
 }
 
-@media (max-height: 700px) {
+@media (max-height: 740px) {
   .result-content {
-    padding-top: calc(1.85rem + env(safe-area-inset-top, 0px));
+    padding-top: calc(1.35rem + env(safe-area-inset-top, 0px));
+    padding-bottom: calc(1.1rem + env(safe-area-inset-bottom, 0px));
   }
 
   .result-frame-inner {
-    padding: 1.25rem 1.3rem 1.15rem;
+    padding: 1rem 1.05rem 0.95rem;
   }
 
   .result-main {
-    gap: 0.9rem;
+    gap: 0.7rem;
+  }
+
+  .result-cheer {
+    width: min(30vw, 108px);
+  }
+
+  .result-title {
+    font-size: 1.08rem;
+  }
+
+  .result-panel {
+    margin: 0.25rem 0;
+    padding: 1rem 0.95rem 0.95rem;
+  }
+
+  .result-count-value {
+    font-size: clamp(2rem, 9vw, 2.35rem);
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    min-height: 46px;
+    padding: 0 24px;
   }
 }
 
