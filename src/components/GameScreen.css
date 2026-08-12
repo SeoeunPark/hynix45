@@ -56,6 +56,15 @@
   border-radius: inherit;
 }
 
+.game-dust-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  border-radius: inherit;
+  background: rgba(235, 228, 222, 0.08);
+}
+
 @media (hover: hover) and (pointer: fine) {
   .game-canvas {
     cursor: none;

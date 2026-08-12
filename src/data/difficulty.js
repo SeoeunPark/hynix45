@@ -1,30 +1,31 @@
 /**
  * 난이도 설정 - 플레이 테스트를 통해 조정 가능
  */
+const sharedGameplay = {
+  initialSpeed: 2.8,
+  speedIncrease: 0.32,
+  maxSpeed: 8.5,
+  spawnInterval: 1150,
+  maxWordsOnScreen: 4,
+  wordScale: 0.88,
+  basketScale: 0.8,
+  fivePointWeight: 0.15,
+  hintUntilCount: 10,
+};
+
 export const difficultySettings = {
   easy: {
-    initialSpeed: 2.8,
-    speedIncrease: 0.32,
-    maxSpeed: 8.5,
-    spawnInterval: 1150,
-    maxWordsOnScreen: 4,
+    ...sharedGameplay,
     correctProbability: 0.6,
-    wordScale: 0.94,
-    basketScale: 0.82,
-    fivePointWeight: 0.15,
-    hintUntilCount: 10,
+    hazardsEnabled: false,
   },
   hard: {
-    initialSpeed: 3.6,
-    speedIncrease: 0.38,
-    maxSpeed: 9,
-    spawnInterval: 980,
-    maxWordsOnScreen: 5,
+    ...sharedGameplay,
     correctProbability: 0.48,
-    wordScale: 0.78,
-    basketScale: 0.76,
-    fivePointWeight: 0.15,
-    hintUntilCount: 0,
+    hazardsEnabled: true,
+    hazardSpawnInterval: 2600,
+    maxHazardsOnScreen: 2,
+    hazardSize: 44,
   },
 };
 

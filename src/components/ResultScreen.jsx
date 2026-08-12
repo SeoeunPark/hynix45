@@ -1,4 +1,5 @@
 import { CLEAR_TARGET } from '../data/keywords';
+import { HAZARD_TYPES } from '../data/hazards';
 import { getBestScores } from '../utils/storage';
 import cheerImg from '../assets/mascot-cheer.png';
 import './ResultScreen.css';
@@ -19,6 +20,8 @@ function highlightSkms(text) {
 export default function ResultScreen({ result, onRestart, onPlayAgain }) {
   const best = getBestScores();
   const isClear = result.reason === 'clear';
+  const isHazard = result.reason === 'hazard';
+  const hazardDef = isHazard ? HAZARD_TYPES[result.hazardType] : null;
   const diffLabel = result.difficulty === 'easy' ? 'EASY' : 'HARD';
   const currentBest = best[result.difficulty];
   const progressPct = Math.min((result.correctCount / CLEAR_TARGET) * 100, 100);
@@ -40,6 +43,8 @@ export default function ResultScreen({ result, onRestart, onPlayAgain }) {
                       <span className="result-title-line">행복한 구성원</span>
                       <span className="result-title-line">여러분을 환영합니다!</span>
                     </>
+                  ) : isHazard ? (
+                    hazardDef?.gameOverTitle ?? '방해 아이콘을 받았어요!'
                   ) : (
                     <>
                       <span className="result-skms">SKMS</span>에 해당하지 않는 단어에요
@@ -49,7 +54,9 @@ export default function ResultScreen({ result, onRestart, onPlayAgain }) {
                 <p className="result-subtitle">
                   {isClear
                     ? 'SKMS 키워드를 모두 맞추셨어요. 이제 One Team의 일원입니다.'
-                    : '다시 도전해볼까요?'}
+                    : isHazard
+                      ? (hazardDef?.gameOverSub ?? '방해 아이콘은 피해서 받지 마세요.')
+                      : '다시 도전해볼까요?'}
                 </p>
               </header>
 
@@ -65,7 +72,17 @@ export default function ResultScreen({ result, onRestart, onPlayAgain }) {
 
               {!isClear && (
                 <section className="result-panel">
-                  {result.wrongWord && (
+                  {isHazard && result.hazardLabel && (
+                    <>
+                      <div className="result-word-block">
+                        <span className="result-word-label">받은 아이콘</span>
+                        <strong className="result-word-value">{result.hazardLabel}</strong>
+                      </div>
+                      <div className="result-divider" />
+                    </>
+                  )}
+
+                  {result.wrongWord && !isHazard && (
                     <>
                       <div className="result-word-block">
                         <span className="result-word-label">선택한 단어</span>

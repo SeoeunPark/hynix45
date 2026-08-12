@@ -11,6 +11,7 @@ export default function GameScreen({ difficulty, onGameEnd }) {
   const [hudState, setHudState] = useState({
     correctCount: 0,
     speedUpFlash: false,
+    dustActive: false,
   });
   const [overlay, setOverlay] = useState(null);
 
@@ -18,6 +19,7 @@ export default function GameScreen({ difficulty, onGameEnd }) {
     setHudState({
       correctCount: state.correctCount,
       speedUpFlash: state.speedUpFlash,
+      dustActive: state.dustActive,
     });
   }, []);
 
@@ -82,7 +84,16 @@ export default function GameScreen({ difficulty, onGameEnd }) {
       <div className="game-area">
         <div className="game-area-glow" aria-hidden="true" />
         <canvas ref={canvasRef} className="game-canvas" />
-        {overlay?.type === 'over' && (
+        {hudState.dustActive && <div className="game-dust-overlay" aria-hidden="true" />}
+        {overlay?.type === 'over' && overlay.reason === 'hazard' && (
+          <div className="game-overlay overlay-over overlay-hazard">
+            <p className="overlay-word">{overlay.hazardLabel}</p>
+            <h2 className="overlay-title">방해 아이콘을 받았어요</h2>
+            <p className="overlay-explanation">폭탄·시계·먼지는 피해서 받지 마세요.</p>
+            <p className="overlay-sub">다시 도전해볼까요?</p>
+          </div>
+        )}
+        {overlay?.type === 'over' && overlay.reason !== 'hazard' && (
           <div className="game-overlay overlay-over">
             {overlay.wrongWord && (
               <p className="overlay-word">{overlay.wrongWord}</p>

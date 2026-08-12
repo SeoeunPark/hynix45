@@ -1,4 +1,5 @@
 import { correctWords, incorrectWords, fivePointWords, onePointWords } from '../data/keywords';
+import { pickHazardType, HAZARD_TYPES } from '../data/hazards';
 
 /**
  * 단어 생성 및 랜덤 선택
@@ -30,6 +31,7 @@ export function createWordEntity(keywordData, canvasWidth, wordScale, ctx) {
 
   return {
     id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    kind: 'word',
     word: keywordData.word,
     correct: keywordData.correct,
     points: keywordData.points,
@@ -42,4 +44,22 @@ export function createWordEntity(keywordData, canvasWidth, wordScale, ctx) {
   };
 }
 
-export { correctWords, incorrectWords };
+export function createHazardEntity(hazardType, canvasWidth, size) {
+  const def = HAZARD_TYPES[hazardType];
+  const margin = size / 2 + 8;
+  const x = margin + Math.random() * (canvasWidth - margin * 2);
+
+  return {
+    id: `hazard-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    kind: 'hazard',
+    hazardType,
+    emoji: def.emoji,
+    label: def.label,
+    x,
+    y: -size,
+    width: size,
+    height: size,
+  };
+}
+
+export { pickHazardType, correctWords, incorrectWords };

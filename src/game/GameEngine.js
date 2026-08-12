@@ -1,7 +1,8 @@
 import { checkCollision } from './Collision';
-import { pickWord, createWordEntity } from './Spawner';
+import { pickWord, createWordEntity, pickHazardType, createHazardEntity } from './Spawner';
 import { InputManager } from './InputManager';
 import { difficultySettings, GAME_CONSTANTS } from '../data/difficulty';
+import { HAZARD_TYPES } from '../data/hazards';
 import { CLEAR_TARGET } from '../data/keywords';
 import { BRAND } from '../data/brandColors';
 import mascotImg from '../assets/mascot.png';
@@ -45,18 +46,22 @@ export class GameEngine {
     this.callbacks = callbacks;
 
     this.words = [];
+    this.hazards = [];
     this.particles = [];
     this.floatTexts = [];
     this.running = false;
     this.paused = false;
     this.lastTime = 0;
     this.spawnTimer = 0;
+    this.hazardSpawnTimer = 0;
     this.startTime = 0;
     this.rafId = null;
 
     this.correctCount = 0;
     this.currentSpeed = this.settings.initialSpeed;
     this.speedUpFlash = 0;
+    this.hazardSpeedBoostTimer = 0;
+    this.dustTimer = 0;
     this.lastWrongWord = null;
 
     this.basket = {
@@ -136,8 +141,13 @@ export class GameEngine {
     return Math.min(initialSpeed + this.correctCount * speedIncrease, maxSpeed);
   }
 
-  getSpeedLevel() {
-    return Math.round(this.currentSpeed * 10) / 10;
+  getSpeedMultiplier() {
+    if (this.hazardSpeedBoostTimer <= 0) return 1;
+    return HAZARD_TYPES.clock.speedMultiplier;
+  }
+
+  getFallSpeed(dt) {
+    return this.currentSpeed * this.getSpeedMultiplier() * (dt / 16);
   }
 
   getPlayTime() {
@@ -166,6 +176,7 @@ export class GameEngine {
     this.startTime = performance.now();
     this.lastTime = this.startTime;
     this.spawnTimer = 500;
+    this.hazardSpawnTimer = this.settings.hazardsEnabled ? 1800 : 0;
     this.input.attach();
     this.resize();
 
@@ -228,8 +239,29 @@ export class GameEngine {
       this.spawnTimer = this.settings.spawnInterval * (0.7 + Math.random() * 0.6);
     }
 
+    // Spawn hazards (HARD)
+    if (this.settings.hazardsEnabled) {
+      this.hazardSpawnTimer -= dt;
+      const maxHazards = this.settings.maxHazardsOnScreen ?? 2;
+      if (this.hazardSpawnTimer <= 0 && this.hazards.length < maxHazards) {
+        const hazardType = pickHazardType();
+        const size = this.settings.hazardSize ?? 44;
+        this.hazards.push(createHazardEntity(hazardType, w, size));
+        const interval = this.settings.hazardSpawnInterval ?? 2600;
+        this.hazardSpawnTimer = interval * (0.75 + Math.random() * 0.5);
+      }
+    }
+
+    if (this.hazardSpeedBoostTimer > 0) {
+      this.hazardSpeedBoostTimer -= dt;
+    }
+    if (this.dustTimer > 0) {
+      this.dustTimer -= dt;
+    }
+
+    const fallSpeed = this.getFallSpeed(dt);
+
     // Move words
-    const fallSpeed = this.currentSpeed * (dt / 16);
     for (let i = this.words.length - 1; i >= 0; i--) {
       const word = this.words[i];
       word.y += fallSpeed;
@@ -242,6 +274,22 @@ export class GameEngine {
 
       if (word.y - word.height / 2 > h + 20) {
         this.words.splice(i, 1);
+      }
+    }
+
+    // Move hazards — miss = no penalty
+    for (let i = this.hazards.length - 1; i >= 0; i--) {
+      const hazard = this.hazards[i];
+      hazard.y += fallSpeed;
+
+      if (checkCollision(hazard, this.basket)) {
+        this.handleHazardCatch(hazard);
+        this.hazards.splice(i, 1);
+        continue;
+      }
+
+      if (hazard.y - hazard.height / 2 > h + 20) {
+        this.hazards.splice(i, 1);
       }
     }
 
@@ -269,8 +317,45 @@ export class GameEngine {
 
     this.callbacks.onUpdate({
       correctCount: this.correctCount,
-      speedUpFlash: this.speedUpFlash > 0,
+      speedUpFlash: this.speedUpFlash > 0 || this.hazardSpeedBoostTimer > 0,
+      dustActive: this.dustTimer > 0,
     });
+  }
+
+  handleHazardCatch(hazard) {
+    const def = HAZARD_TYPES[hazard.hazardType];
+    if (!def) return;
+
+    if (def.gameOver) {
+      this.paused = true;
+      this.callbacks.onWrong(hazard.label);
+      this.callbacks.onGameOver({
+        correctCount: this.correctCount,
+        difficulty: this.difficulty,
+        reason: 'hazard',
+        hazardType: hazard.hazardType,
+        hazardLabel: def.label,
+      });
+      return;
+    }
+
+    if (hazard.hazardType === 'clock') {
+      this.hazardSpeedBoostTimer = def.duration;
+      this.speedUpFlash = GAME_CONSTANTS.speedUpFlashDuration;
+      this.floatTexts.push(createFloatText(hazard.x, hazard.y - 20, def.floatText, BRAND.orange));
+      for (let i = 0; i < 6; i++) {
+        this.particles.push(createParticle(hazard.x, hazard.y, BRAND.orange));
+      }
+      return;
+    }
+
+    if (hazard.hazardType === 'dust') {
+      this.dustTimer = def.duration;
+      this.floatTexts.push(createFloatText(hazard.x, hazard.y - 20, def.floatText, BRAND.text));
+      for (let i = 0; i < 5; i++) {
+        this.particles.push(createParticle(hazard.x, hazard.y, 'rgba(140, 131, 128, 0.8)'));
+      }
+    }
   }
 
   handleCatch(word) {
@@ -317,6 +402,10 @@ export class GameEngine {
       this.drawWord(ctx, word);
     }
 
+    for (const hazard of this.hazards) {
+      this.drawHazard(ctx, hazard);
+    }
+
     this.drawBasket(ctx, this.basket);
 
     for (const p of this.particles) {
@@ -350,6 +439,17 @@ export class GameEngine {
       ctx.fillStyle = BRAND.orange;
       ctx.fillText('속도가 빨라졌어요', w / 2, h * 0.32 + 18);
       ctx.globalAlpha = 1;
+    }
+
+    if (this.dustTimer > 0) {
+      const dustDef = HAZARD_TYPES.dust;
+      const alpha = Math.min(this.dustTimer / dustDef.duration, 1) * 0.62;
+      ctx.save();
+      ctx.fillStyle = `rgba(235, 228, 222, ${alpha})`;
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = `rgba(255, 255, 255, ${alpha * 0.35})`;
+      ctx.fillRect(0, 0, w, h * 0.35);
+      ctx.restore();
     }
   }
 
@@ -456,6 +556,33 @@ export class GameEngine {
     ctx.textBaseline = 'middle';
     ctx.fillText(text, x + (isCorrect ? 1 : 0), y);
 
+    ctx.restore();
+  }
+
+  drawHazard(ctx, hazard) {
+    const { x, y, width, emoji, hazardType } = hazard;
+    const def = HAZARD_TYPES[hazardType];
+    const radius = width / 2;
+
+    ctx.save();
+    ctx.shadowColor = 'rgba(34, 32, 30, 0.18)';
+    ctx.shadowBlur = 10;
+    ctx.shadowOffsetY = 3;
+
+    ctx.fillStyle = def?.bg ?? '#3A3836';
+    ctx.strokeStyle = def?.border ?? 'rgba(140, 131, 128, 0.5)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(x, y, radius - 1, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetY = 0;
+    ctx.font = `${Math.round(width * 0.48)}px "Apple Color Emoji", "Segoe UI Emoji", sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(emoji, x, y + 1);
     ctx.restore();
   }
 

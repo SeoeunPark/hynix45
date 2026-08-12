@@ -44,7 +44,7 @@ export default function StartScreen({ onStart }) {
                       onClick={() => onStart('easy')}
                     >
                       <span className="btn-label">EASY</span>
-                      <span className="btn-desc">기본 개념 익히기</span>
+                      <span className="btn-desc">초반 10개 힌트 · 후반 구분 없음</span>
                 {best.easy !== null && (
                   <span className="btn-best">BEST {best.easy}개</span>
                 )}
@@ -55,7 +55,7 @@ export default function StartScreen({ onStart }) {
                       onClick={() => onStart('hard')}
                     >
                       <span className="btn-label">HARD</span>
-                      <span className="btn-desc">빠른 판단 &amp; 반응</span>
+                      <span className="btn-desc">폭탄·시계·먼지 주의</span>
                 {best.hard !== null && (
                   <span className="btn-best">BEST {best.hard}개</span>
                 )}
@@ -83,6 +83,14 @@ export default function StartScreen({ onStart }) {
                       <li>
                         <span className="rules-dot rules-dot--no" aria-hidden="true" />
                         비슷해 보여도 정답이 아닌 단어를 받으면 게임 종료
+                      </li>
+                      <li>
+                        <span className="rules-dot rules-dot--ok" aria-hidden="true" />
+                        초반 <em>10개</em>는 정답 색 힌트, 이후 색 구분 없음
+                      </li>
+                      <li>
+                        <span className="rules-dot rules-dot--no" aria-hidden="true" />
+                        HARD: 폭탄·시계·먼지 등장 — <em>피하면 OK</em>, 받으면 효과
                       </li>
                     </ul>
 
