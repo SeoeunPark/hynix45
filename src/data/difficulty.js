@@ -39,6 +39,7 @@ export const GAME_CONSTANTS = {
   wordMinWidth: 70,
   wordHeight: 36,
   speedUpFlashDuration: 800,
+  hintOffFlashDuration: 1200,
   particleCount: 12,
   particleDuration: 600,
   floatTextDuration: 900,

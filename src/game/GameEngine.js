@@ -60,6 +60,7 @@ export class GameEngine {
     this.correctCount = 0;
     this.currentSpeed = this.settings.initialSpeed;
     this.speedUpFlash = 0;
+    this.hintOffFlash = 0;
     this.hazardSpeedBoostTimer = 0;
     this.dustTimer = 0;
     this.lastWrongWord = null;
@@ -324,6 +325,9 @@ export class GameEngine {
     if (this.speedUpFlash > 0) {
       this.speedUpFlash -= dt;
     }
+    if (this.hintOffFlash > 0) {
+      this.hintOffFlash -= dt;
+    }
 
     this.callbacks.onUpdate({
       correctCount: this.correctCount,
@@ -378,7 +382,12 @@ export class GameEngine {
         this.particles.push(createParticle(word.x, word.y, i % 2 === 0 ? BRAND.red : BRAND.orange));
       }
 
-      this.speedUpFlash = GAME_CONSTANTS.speedUpFlashDuration;
+      const hintLimit = this.settings.hintUntilCount ?? 0;
+      if (hintLimit > 0 && this.correctCount === hintLimit) {
+        this.hintOffFlash = GAME_CONSTANTS.hintOffFlashDuration;
+      } else {
+        this.speedUpFlash = GAME_CONSTANTS.speedUpFlashDuration;
+      }
       this.callbacks.onCorrect();
 
       if (this.correctCount >= CLEAR_TARGET) {
@@ -448,6 +457,19 @@ export class GameEngine {
       ctx.font = '600 11px "Pretendard", sans-serif';
       ctx.fillStyle = BRAND.orange;
       ctx.fillText('속도가 빨라졌어요', w / 2, h * 0.32 + 18);
+      ctx.globalAlpha = 1;
+    }
+
+    if (this.hintOffFlash > 0) {
+      const alpha = Math.min(this.hintOffFlash / 500, 1) * 0.95;
+      ctx.globalAlpha = alpha;
+      ctx.font = '700 15px "Pretendard", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillStyle = BRAND.red;
+      ctx.fillText('HINT OFF!', w / 2, h * 0.32);
+      ctx.font = '600 11px "Pretendard", sans-serif';
+      ctx.fillStyle = BRAND.text;
+      ctx.fillText('색 구분이 사라졌어요', w / 2, h * 0.32 + 18);
       ctx.globalAlpha = 1;
     }
 
