@@ -81,6 +81,16 @@ export class GameEngine {
       this.basketImageLoaded = true;
       this.layoutBasket();
     };
+    this.hazardImages = {};
+    this.hazardImagesLoaded = {};
+    for (const [type, def] of Object.entries(HAZARD_TYPES)) {
+      const img = new Image();
+      img.src = def.image;
+      img.onload = () => {
+        this.hazardImagesLoaded[type] = true;
+      };
+      this.hazardImages[type] = img;
+    }
     this.bgTime = 0;
     this.dpr = 1;
   }
@@ -560,29 +570,25 @@ export class GameEngine {
   }
 
   drawHazard(ctx, hazard) {
-    const { x, y, width, emoji, hazardType } = hazard;
-    const def = HAZARD_TYPES[hazardType];
-    const radius = width / 2;
+    const { x, y, width, hazardType } = hazard;
+    const img = this.hazardImages[hazardType];
+    const loaded = this.hazardImagesLoaded[hazardType] && img?.width > 0;
 
     ctx.save();
-    ctx.shadowColor = 'rgba(34, 32, 30, 0.18)';
-    ctx.shadowBlur = 10;
+    ctx.shadowColor = 'rgba(34, 32, 30, 0.12)';
+    ctx.shadowBlur = 8;
     ctx.shadowOffsetY = 3;
 
-    ctx.fillStyle = def?.bg ?? '#3A3836';
-    ctx.strokeStyle = def?.border ?? 'rgba(140, 131, 128, 0.5)';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.arc(x, y, radius - 1, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.stroke();
+    if (loaded) {
+      ctx.drawImage(img, x - width / 2, y - width / 2, width, width);
+    } else {
+      ctx.fillStyle = BRAND.text;
+      ctx.font = `600 ${Math.round(width * 0.35)}px "Pretendard", sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('?', x, y);
+    }
 
-    ctx.shadowBlur = 0;
-    ctx.shadowOffsetY = 0;
-    ctx.font = `${Math.round(width * 0.48)}px "Apple Color Emoji", "Segoe UI Emoji", sans-serif`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(emoji, x, y + 1);
     ctx.restore();
   }
 

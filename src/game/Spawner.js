@@ -53,7 +53,6 @@ export function createHazardEntity(hazardType, canvasWidth, size) {
     id: `hazard-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
     kind: 'hazard',
     hazardType,
-    emoji: def.emoji,
     label: def.label,
     x,
     y: -size,
