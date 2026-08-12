@@ -1,0 +1,21 @@
+/** SK hynix 브랜드 — near-white UI + canvas warm tint */
+export const BRAND = {
+  red: '#E2001F',
+  orange: '#F0791D',
+  ember: '#C4001A',
+  mint: '#2E9E77',
+  redDark: '#C4001A',
+  orangeDark: '#D96A12',
+  redLight: '#E8303A',
+  orangeLight: '#F59A45',
+  bg: '#FFFBFA',
+  bgSoft: '#FFFFFF',
+  bgMuted: '#FFF9F8',
+  surface: '#FFFFFF',
+  text: '#22201E',
+  textSecondary: '#8C8380',
+  textMuted: '#8C8380',
+  line: '#F3E4E0',
+  border: '#F3E4E0',
+  borderOrange: 'rgba(240, 121, 29, 0.22)',
+};

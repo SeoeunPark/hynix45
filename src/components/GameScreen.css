@@ -1,0 +1,195 @@
+.game-screen {
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  touch-action: none;
+  overflow: hidden;
+  position: relative;
+  background:
+    radial-gradient(ellipse 90% 70% at 50% 50%, rgba(255, 251, 250, 0.95), #FFFFFF 72%);
+}
+
+.game-ambient {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% 0%, rgba(240, 121, 29, 0.06), transparent 58%),
+    radial-gradient(ellipse 55% 40% at 50% 100%, rgba(226, 0, 31, 0.04), transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.game-area {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  min-height: 0;
+  margin: 0 0.65rem 0.65rem;
+  border-radius: 16px;
+  border: 1px solid rgba(243, 228, 224, 0.9);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 8px 24px rgba(34, 32, 30, 0.05);
+  z-index: 1;
+}
+
+.game-area-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--basket-glow);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.game-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  position: relative;
+  z-index: 0;
+  border-radius: inherit;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .game-canvas {
+    cursor: none;
+  }
+}
+
+.game-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(255, 252, 248, 0.88);
+  backdrop-filter: blur(12px);
+  animation: fadeSlideUp 140ms var(--ease-soft);
+  pointer-events: none;
+  z-index: 20;
+  text-align: center;
+  border-radius: inherit;
+}
+
+.overlay-word {
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--color-red);
+  margin-bottom: 0.75rem;
+  padding: 0.45rem 1.1rem;
+  background: rgba(255, 255, 255, 0.95);
+  border: var(--card-border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--soft-shadow);
+}
+
+.overlay-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+}
+
+.overlay-over .overlay-title {
+  color: var(--color-ink);
+}
+
+.overlay-clear .overlay-title {
+  background: var(--btn-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.overlay-clear .overlay-title.overlay-title-shine {
+  background: linear-gradient(
+    90deg,
+    #F0791D 0%,
+    #E2001F 35%,
+    rgba(255, 255, 255, 0.95) 50%,
+    #E2001F 65%,
+    #F0791D 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: titleShine 0.75s var(--ease-soft) 1;
+}
+
+.overlay-explanation {
+  margin-top: 0.85rem;
+  max-width: 13.5rem;
+  font-size: var(--text-caption);
+  font-weight: 500;
+  color: var(--color-ink);
+  line-height: 1.6;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  text-wrap: pretty;
+}
+
+.overlay-sub {
+  margin-top: 0.55rem;
+  font-size: var(--text-caption);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.overlay-clear .overlay-title {
+  font-size: clamp(1.1rem, 4.2vw, 1.35rem);
+  line-height: 1.4;
+  max-width: 16rem;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  text-wrap: pretty;
+}
+
+.overlay-title-line {
+  display: block;
+}
+
+.overlay-cheer {
+  width: min(34vw, 108px);
+  height: auto;
+  margin-bottom: 0.5rem;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 14px rgba(34, 32, 30, 0.08));
+  animation: cheerPop 480ms var(--ease-soft);
+}
+
+.overlay-clear-sub {
+  margin-top: 0.7rem;
+  font-size: var(--text-caption);
+  font-weight: 600;
+  color: var(--color-ink);
+  line-height: 1.5;
+  max-width: 15rem;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  text-wrap: pretty;
+}
+
+.overlay-clear .overlay-sub {
+  color: var(--color-mint);
+  font-weight: 600;
+}
+
+.overlay-clear-badge {
+  margin-bottom: 0.65rem;
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--color-red);
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(226, 0, 31, 0.05);
+  border: 1px solid rgba(226, 0, 31, 0.1);
+}

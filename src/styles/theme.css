@@ -1,0 +1,80 @@
+:root {
+  /* Background — almost white */
+  --color-bg: #FFFFFF;
+  --color-bg-tint: #FFFBFA;
+  --color-surface: #FFFFFF;
+  --color-warm: #FFF9F8;
+
+  /* Brand */
+  --color-red: #E2001F;
+  --color-orange: #F0791D;
+  --color-ember: #C4001A;
+  --color-mint: #2E9E77;
+  --color-red-muted: #B8454F;
+
+  /* Text */
+  --color-ink: #22201E;
+  --color-text-secondary: #8C8380;
+  --color-text-inverse: #FFFFFF;
+
+  /* Line & shadow */
+  --line-hairline: #F3E4E0;
+  --soft-shadow: 0 4px 16px rgba(34, 32, 30, 0.06);
+  --soft-shadow-lg: 0 8px 24px rgba(34, 32, 30, 0.08);
+  --soft-inset: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  --soft-surface: #FFFFFF;
+  --basket-glow: radial-gradient(ellipse 70% 50% at 50% 85%, rgba(240, 121, 29, 0.04), transparent 70%);
+
+  /* Card */
+  --card-radius: 20px;
+  --card-border: 1px solid var(--line-hairline);
+  --card-shadow-accent: 0 12px 28px rgba(226, 0, 31, 0.22);
+  --card-shadow-hover: 0 4px 16px rgba(226, 0, 31, 0.06);
+
+  /* Button */
+  --btn-radius: 18px;
+  --btn-min-height: 52px;
+  --btn-gradient: linear-gradient(135deg, #F0791D 0%, #E2001F 55%, #C4001A 100%);
+  --btn-shadow: 0 12px 28px rgba(226, 0, 31, 0.22);
+  --btn-shadow-hover: 0 14px 32px rgba(226, 0, 31, 0.26);
+  --btn-shadow-active: 0 8px 20px rgba(226, 0, 31, 0.18);
+
+  /* Typography */
+  --font-display: 'Pretendard', sans-serif;
+  --font-body: 'Pretendard', sans-serif;
+  --text-display: 29px;
+  --text-title: 22px;
+  --text-body: 17px;
+  --text-caption: 14px;
+  --text-eyebrow: 12px;
+
+  /* Motion */
+  --ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+
+  /* Legacy aliases */
+  --sk-red: var(--color-red);
+  --sk-red-dark: var(--color-ember);
+  --sk-red-light: #E8303A;
+  --sk-orange: var(--color-orange);
+  --sk-orange-dark: #D96A12;
+  --sk-orange-light: #F59A45;
+  --bg-deep: var(--color-bg);
+  --bg-base: var(--color-bg);
+  --bg-surface: var(--color-surface);
+  --bg-glass: rgba(255, 255, 255, 0.88);
+  --bg-muted: var(--color-bg-tint);
+  --text-primary: var(--color-ink);
+  --text-secondary: var(--color-text-secondary);
+  --text-muted: var(--color-text-secondary);
+  --border-subtle: var(--line-hairline);
+  --border-active: rgba(226, 0, 31, 0.18);
+  --gradient-brand: var(--btn-gradient);
+  --radius-sm: 14px;
+  --radius-md: var(--card-radius);
+  --radius-lg: 24px;
+  --shadow-sm: var(--card-shadow-hover);
+  --shadow-md: var(--card-shadow-accent);
+  --shadow-glow: var(--btn-shadow);
+}

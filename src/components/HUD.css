@@ -1,0 +1,128 @@
+.hud {
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+  margin: 0.55rem 0.65rem 0.5rem;
+  padding: 0.75rem 1rem 0.65rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(243, 228, 224, 0.95);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.98),
+    0 4px 14px rgba(34, 32, 30, 0.04);
+}
+
+.hud::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 1.25rem;
+  right: 1.25rem;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(240, 121, 29, 0.35) 20%,
+    rgba(226, 0, 31, 0.45) 50%,
+    rgba(240, 121, 29, 0.35) 80%,
+    transparent
+  );
+  pointer-events: none;
+}
+
+.hud-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: end;
+  gap: 0.5rem;
+  margin-bottom: 0.65rem;
+}
+
+.hud-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.hud-main {
+  align-items: flex-start;
+}
+
+.hud-center {
+  align-items: center;
+}
+
+.hud-right {
+  align-items: flex-end;
+}
+
+.hud-difficulty {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3.25rem;
+  padding: 0.22rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.hud-difficulty--easy {
+  color: var(--color-orange);
+  background: rgba(240, 121, 29, 0.08);
+  border: 1px solid rgba(240, 121, 29, 0.18);
+}
+
+.hud-difficulty--hard {
+  color: var(--color-red);
+  background: rgba(226, 0, 31, 0.06);
+  border: 1px solid rgba(226, 0, 31, 0.14);
+}
+
+.hud-label {
+  font-size: var(--text-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--color-text-secondary);
+}
+
+.hud-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-ink);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.hud-value-sub {
+  margin-left: 0.15rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.hud-pulse {
+  animation: valuePulse 150ms var(--ease-soft);
+}
+
+.hud-progress-track {
+  height: 7px;
+  background: rgba(229, 218, 208, 0.55);
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(80, 55, 40, 0.06);
+}
+
+.hud-progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--color-orange), var(--color-red));
+  transition: width 220ms var(--ease-soft);
+  box-shadow: 0 0 8px rgba(226, 0, 31, 0.12);
+}
+
+.hud-progress-fill.progress-flash {
+  box-shadow: 0 0 14px rgba(226, 0, 31, 0.28);
+}
