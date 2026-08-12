@@ -67,10 +67,7 @@ export class GameEngine {
       visualHalfW: GAME_CONSTANTS.basketWidth * this.settings.basketScale / 2,
     };
 
-    this.input = new InputManager(canvas, () => ({
-      width: canvas.width / (window.devicePixelRatio || 1),
-      height: canvas.height / (window.devicePixelRatio || 1),
-    }));
+    this.input = new InputManager(canvas, () => this.getLogicalSize());
     this._resizeObserver = null;
     this.basketImage = new Image();
     this.basketImage.src = mascotImg;
@@ -80,6 +77,14 @@ export class GameEngine {
       this.layoutBasket();
     };
     this.bgTime = 0;
+    this.dpr = 1;
+  }
+
+  getLogicalSize() {
+    return {
+      width: this.canvas.width / this.dpr,
+      height: this.canvas.height / this.dpr,
+    };
   }
 
   getBasketVisualMetrics(basket) {
@@ -123,7 +128,7 @@ export class GameEngine {
 
     const halfW = visual.visualHalfW;
     const centerX = rect.width / 2;
-    this.basket.x = Math.min(Math.max(this.basket.x || centerX, halfW), rect.width - halfW);
+    this.basket.x = Math.min(Math.max(centerX, halfW), rect.width - halfW);
   }
 
   getSpeed() {
@@ -145,12 +150,12 @@ export class GameEngine {
     if (!parent) return;
 
     const rect = parent.getBoundingClientRect();
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    this.canvas.width = rect.width * dpr;
-    this.canvas.height = rect.height * dpr;
+    this.dpr = Math.min(window.devicePixelRatio || 1, 2);
+    this.canvas.width = Math.max(1, Math.round(rect.width * this.dpr));
+    this.canvas.height = Math.max(1, Math.round(rect.height * this.dpr));
     this.canvas.style.width = `${rect.width}px`;
     this.canvas.style.height = `${rect.height}px`;
-    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
 
     this.layoutBasket();
   }
@@ -167,6 +172,11 @@ export class GameEngine {
     this._resizeObserver = new ResizeObserver(() => this.resize());
     this._resizeObserver.observe(this.canvas.parentElement);
 
+    this._onViewportResize = () => this.resize();
+    window.visualViewport?.addEventListener('resize', this._onViewportResize);
+    window.visualViewport?.addEventListener('scroll', this._onViewportResize);
+    requestAnimationFrame(() => this.resize());
+
     this.rafId = requestAnimationFrame((t) => this.loop(t));
   }
 
@@ -180,6 +190,11 @@ export class GameEngine {
     if (this._resizeObserver) {
       this._resizeObserver.disconnect();
       this._resizeObserver = null;
+    }
+    if (this._onViewportResize) {
+      window.visualViewport?.removeEventListener('resize', this._onViewportResize);
+      window.visualViewport?.removeEventListener('scroll', this._onViewportResize);
+      this._onViewportResize = null;
     }
   }
 
@@ -198,8 +213,7 @@ export class GameEngine {
   }
 
   update(dt, timestamp) {
-    const w = this.canvas.width / (window.devicePixelRatio || 1);
-    const h = this.canvas.height / (window.devicePixelRatio || 1);
+    const { width: w, height: h } = this.getLogicalSize();
 
     this.currentSpeed = this.getSpeed();
     this.bgTime += dt;
@@ -295,8 +309,7 @@ export class GameEngine {
 
   render() {
     const ctx = this.ctx;
-    const w = this.canvas.width / (window.devicePixelRatio || 1);
-    const h = this.canvas.height / (window.devicePixelRatio || 1);
+    const { width: w, height: h } = this.getLogicalSize();
 
     this.drawBackground(ctx, w, h);
 
